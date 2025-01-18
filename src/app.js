@@ -1,14 +1,33 @@
-const express = require('express')
-const app = express()
-
-const port = 4000
-
-app.get('/', (req, res) =>{
-    res.send("Hello world!")
-})
+import 'dotenv/config'
+import express from 'express'
+import routes from './api/routes.js'
 
 
-app.listen(port, ()=>{
-    console.log(`server berjalan di port ${port}`);
+// app.get('/', (req, res) =>{
+//     res.send("Hello world!")
+// })
+
+
+
+async function startServer() {
+    const app = express()
+
+    const port = process.env.PORT
+
+    app.use(routes())
+
+    app.listen(port, ()=>{
+        console.log(`server berjalan di port ${port}`);
+        
+    }).on('error', err=>{
+        process.exit(1)
+    })
+}
+
+startServer();
+
+
+// app.listen(port, ()=>{
+//     console.log(`server berjalan di port ${port}`);
     
-})
+// })
