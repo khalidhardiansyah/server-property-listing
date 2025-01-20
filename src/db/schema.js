@@ -49,7 +49,7 @@ export const propertiesImagesRelation = relations(propertiesImageTable, ({one})=
 
 // relation propertyDetail
 export const propertiesDetailsRelation = relations(propertiesDetailTable, ({one})=>({
-    description: one(propertiesTable, {
+    property: one(propertiesTable, {
         fields: [propertiesDetailTable.property_id],
         references:[propertiesTable.id]
     })
