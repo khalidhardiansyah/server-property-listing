@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
-import routes from "./api/routes.js";
-import { propertiesTable, propertiesDetailTable, propertiesImageTable } from "./db/schema.js";
+import routes from "./api/";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { seed } from "drizzle-seed";
 import { count } from "drizzle-orm";
