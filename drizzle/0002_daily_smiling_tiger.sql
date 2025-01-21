@@ -1,0 +1,2 @@
+ALTER TABLE "properties" ADD COLUMN "region_id" integer;--> statement-breakpoint
+ALTER TABLE "properties" ADD CONSTRAINT "properties_region_id_regions_id_fk" FOREIGN KEY ("region_id") REFERENCES "public"."regions"("id") ON DELETE no action ON UPDATE no action;

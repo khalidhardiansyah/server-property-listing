@@ -9,6 +9,8 @@ export const propertiesTable = pgTable("properties", {
     interior:real('interior').notNull(),
     lot:real('lot').notNull(),
     price: real("price"),
+    region_id: integer('region_id').references(()=>regions.id)
+
 })
 
 
@@ -31,11 +33,23 @@ export const propertiesDetailTable = pgTable("properties_details",{
 })
 
 
+export const regions = pgTable("regions",{
+    id:integer('id').primaryKey(),
+    name:varchar('name',{
+        length:255
+    }).notNull(),
+    source:text('source').notNull(),
+})
+
 
 // relation table property w
-export const propertiesRelation = relations(propertiesTable, ({many})=>({
+export const propertiesRelation = relations(propertiesTable, ({many,one})=>({
     images:many(propertiesImageTable),
-    detail:many(propertiesDetailTable)
+    detail:many(propertiesDetailTable),
+    region:one(regions,{
+        fields:[propertiesTable.region_id],
+        references:[regions.id]
+    })
 }))
 
 // relation propertiesImages
@@ -54,5 +68,14 @@ export const propertiesDetailsRelation = relations(propertiesDetailTable, ({one}
         references:[propertiesTable.id]
     })
 }))
+
+export const RegionRelation = relations(regions, ({many})=>({
+    property:many(propertiesTable)
+}))
+
+
+
+
+
 
 

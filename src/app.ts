@@ -4,67 +4,48 @@ import routes from "./api/";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { seed } from "drizzle-seed";
 import { count } from "drizzle-orm";
+import { regions } from "./db/schema";
 
-// app.get('/', (req, res) =>{
-//     res.send("Hello world!")
-// })
 
 async function startServer() {
     const db = drizzle();
 
     //   const prop = [{
     //     id:1,
-    //     label:"gambar",
+    //     name:"Bantul",
     //     source:'https://picsum.photos/seed/picsum/2500/1500',
-    //     property_id:1
+        
     //   },
     //   {
     //     id:2,
-    //     label:"gambar",
+    //     name:"Yogyakarta",
     //     source:'https://picsum.photos/seed/picsum/2500/1500',
-    //     property_id:1
+        
     //   },
     //   {
     //     id:3,
-    //     label:"gambar",
+    //     name:"sleman",
     //     source:'https://picsum.photos/seed/picsum/2500/1500',
-    //     property_id:1
+        
     //   },
     //   {
     //     id:4,
-    //     label:"gambar",
+    //     name:"gunung kidu;",
     //     source:'https://picsum.photos/seed/picsum/2500/1500',
-    //     property_id:1
+        
     //   },
     //   {
     //     id:5,
-    //     label:"gambar",
+    //     name:"kulon progo",
     //     source:'https://picsum.photos/seed/picsum/2500/1500',
-    //     property_id:2
+      
     //   },
-    //   {
-    //     id:6,
-    //     label:"gambar",
-    //     source:'https://picsum.photos/seed/picsum/2500/1500',
-    //     property_id:2
-    //   },
-    //   {
-    //     id:7,
-    //     label:"gambar",
-    //     source:'https://picsum.photos/seed/picsum/2500/1500',
-    //     property_id:2
-    //   },
-    //   {
-    //     id:8,
-    //     label:"gambar",
-    //     source:'https://picsum.photos/seed/picsum/2500/1500',
-    //     property_id:2
-    //   },
+     
     // ];
 
     
     // for (let index = 0; index < prop.length; index++) {
-    //     await db.insert(propertiesImageTable).values(prop[index]);
+    //     await db.insert(regions).values(prop[index]);
     //     console.log("berhasil dibuat");
     // }
 
@@ -89,7 +70,3 @@ async function startServer() {
 
 startServer();
 
-// app.listen(port, ()=>{
-//     console.log(`server berjalan di port ${port}`);
-
-// })
