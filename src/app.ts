@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import { Response, Request } from "express";
 import routes from "./api/";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { seed } from "drizzle-seed";
@@ -58,9 +59,10 @@ async function startServer() {
     const port = process.env.PORT;
 
     app.use(routes());
+    app.get('/', (req:Request, res:Response)=>res.send({data:"Berhasil"}))
 
     app
-        .listen(port, () => {
+        .listen(port,() => {
             console.log(`server berjalan di port ${port}`);
         })
         .on("error", (err) => {
