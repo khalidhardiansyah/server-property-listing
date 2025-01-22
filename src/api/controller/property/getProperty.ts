@@ -1,19 +1,20 @@
-import { Request, Response,} from "express";
+import { NextFunction, Request, Response,} from "express";
 import { propertiesTable, propertiesImageTable } from "../../../db/schema";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { eq } from "drizzle-orm";
 import { PropertyImageTable, PropertyTable } from "../../../types";
-export default async function getProperty(req:Request, res:Response){
+export default async function getProperty(req:Request, res:Response, next:NextFunction){
     try {
         const db = drizzle()
         const params = parseInt(req.params.id)
         type Property = PropertyTable["select"]
         type Image = PropertyImageTable["select"]
-        // if (isNaN(params)) {
-        //     res.status(406).json({
-        //         error: "parameter bukan angka"
-        //     })
-        // }
+        if (isNaN(params)) {
+            res.status(406).json({
+                error: "parameter bukan angka"
+            })
+return next()
+        }
         
 
         const response = await db.select({

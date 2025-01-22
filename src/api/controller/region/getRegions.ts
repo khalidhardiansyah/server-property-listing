@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/vercel-postgres";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import {
   propertiesImageTable,
   propertiesTable,
@@ -7,7 +7,7 @@ import {
 } from "../../../db/schema";
 import { eq } from "drizzle-orm";
 import { PropertyImageTable, PropertyTable, RegionTable } from "../../../types";
-export default async function getRegion(req: Request, res: Response) {
+export default async function getRegion(req: Request, res: Response, next:NextFunction) {
   const db = drizzle();
   const params = parseInt(req.params.id);
 
@@ -23,11 +23,16 @@ export default async function getRegion(req: Request, res: Response) {
       })
       .from(regions)
       .where(eq(regions.id, params))
-      .innerJoin(propertiesTable, eq(regions.id, propertiesTable.region_id))
-      .innerJoin(
+      .leftJoin(propertiesTable, eq(regions.id, propertiesTable.region_id))
+      .leftJoin(
         propertiesImageTable,
         eq(propertiesTable.id, propertiesImageTable.property_id)
       );
+  if (response.length === 0) {
+    res.status(404).json({error:"Data tidak ada"})
+    return next()
+  }
+   
 
     const result = response.reduce<
       Record<
