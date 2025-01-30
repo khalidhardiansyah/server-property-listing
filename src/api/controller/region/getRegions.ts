@@ -15,59 +15,64 @@ export default async function getRegion(req: Request, res: Response, next:NextFu
   type Property = PropertyTable["select"];
   type Image = PropertyImageTable["select"];
   try {
-    const response = await db
-      .select({
-        region: regions,
-        properties: propertiesTable,
-        images: propertiesImageTable,
-      })
-      .from(regions)
-      .where(eq(regions.id, params))
-      .leftJoin(propertiesTable, eq(regions.id, propertiesTable.region_id))
-      .leftJoin(
-        propertiesImageTable,
-        eq(propertiesTable.id, propertiesImageTable.property_id)
-      );
+
+
+      const response = await db
+  .select({
+    region: regions,
+    property: propertiesTable,
+    image: propertiesImageTable,
+  })
+  .from(regions)
+  .leftJoin(propertiesTable, eq(regions.id, propertiesTable.region_id))
+  .leftJoin(propertiesImageTable, eq(propertiesTable.id, propertiesImageTable.property_id))
+  .where(eq(regions.id, params));
+
+
   if (response.length === 0) {
     res.status(404).json({error:"Data tidak ada"})
     return next()
   }
    
+  const result = response.reduce<
+  Record<
+    number,
+    {
+      region: Region;
+      properties: Array<{
+        property: Property;
+        images: Image[];
+      }>;
+    }
+  >
+>((acc, row) => {
+  const region = row.region;
+  const property = row.property;
+  const image = row.image;
 
-    const result = response.reduce<
-      Record<
-        number,
-        {
-          region: Region;
-          properties: Array<{
-            property: Property;
-            images: Image[];
-          }>;
-        }
-      >
-    >((acc, row) => {
-      const region = row.region;
-      const property = row.properties;
-      const image = row.images;
+  if (!region) return acc;
 
-      if (!acc[region.id]) {
-        acc[region.id] = { region, properties: [] };
-      }
+  if (!acc[region.id]) {
+    acc[region.id] = { region, properties: [] };
+  }
 
-      let propertyEntry = acc[region.id].properties.find(
-        (p) => p.property.id == property.id
-      );
-      if (!propertyEntry) {
-        propertyEntry = { property, images: [] };
-        acc[region.id].properties.push(propertyEntry);
-      }
+  if (property) {
+    let propertyEntry = acc[region.id].properties.find(
+      (p) => p.property.id === property.id
+    );
+    if (!propertyEntry) {
+      propertyEntry = { property, images: [] };
+      acc[region.id].properties.push(propertyEntry);
+    }
 
-      if (image) {
-        propertyEntry.images.push(image);
-      }
+    if (image) {
+      propertyEntry.images.push(image);
+    }
+  }
 
-      return acc;
-    }, {});
+  return acc;
+}, {});
+
 
     res.status(200).json({ data: result });
   } catch (error) {
